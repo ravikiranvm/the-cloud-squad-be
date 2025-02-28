@@ -40,3 +40,14 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "sse" {
         }
     }
 }
+
+# Configure remote backend to store terraform state files for this application
+terraform {
+    backend "s3" {
+        bucket = "terraform-state-for-p5"
+        key = "global/s3/terraform.tfstate"
+        region = "ap-south-1"
+        encrypt = true
+        use_lockfile = true
+    }
+}
