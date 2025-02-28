@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_api" "saa_api" {
-    name = "saa-api"
+    name = "saa-api-${var.stage}"
     protocol_type = "HTTP"
 
     cors_configuration {
@@ -15,6 +15,12 @@ resource "aws_apigatewayv2_route" "get_saa_questions" {
     target = "integrations/${aws_apigatewayv2_integration.saa_api_integration.id}"
 }
 
+resource "aws_apigatewayv2_route" "post_test" {
+    api_id = aws_apigatewayv2_api.saa_api.id
+    route_key = "POST /submit-test"
+    target = "integrations/${aws_apigatewayv2_integration.saa_api_integration.id}"
+}
+
 resource "aws_apigatewayv2_integration" "saa_api_integration" {
     api_id = aws_apigatewayv2_api.saa_api.id
     integration_type = "AWS_PROXY"
@@ -24,7 +30,7 @@ resource "aws_apigatewayv2_integration" "saa_api_integration" {
 
 resource "aws_apigatewayv2_stage" "stage" {
     api_id = aws_apigatewayv2_api.saa_api.id
-    name = "${var.stage_name}"
+    name = "${var.stage}"
     auto_deploy = true
 }
 

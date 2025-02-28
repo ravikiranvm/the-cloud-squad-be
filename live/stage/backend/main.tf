@@ -15,8 +15,8 @@ module "SAAQuestionRetriever" {
 
 # API gateway
 module "saa_api" {
-  source      = "../../../modules/api"
-  stage_name  = "saa-api-stage"
+  source = "../../../modules/api"
+  stage  = "stage"
   lambda_arn  = module.SAAQuestionRetriever.function_arn
   function_name = module.SAAQuestionRetriever.function_name
 }
