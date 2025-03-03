@@ -1,6 +1,9 @@
 module "SAADynamoDBTable" {
   source        = "../../../modules/data-stores/dy-db"
-  SAAQTableName = "SAAQuestionBank"
+  tableName = "SAAQuestionBank"
+  primary_key = "id"
+  primary_key_type = "N"
+  sort_key = null
 }
 
 # Lambda Function to retrieve SAA questions from the SAA Dy DB table
