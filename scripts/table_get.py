@@ -1,16 +1,44 @@
-import boto3, random, json
+import boto3, random, json, uuid, datetime
 
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('SAAQuestionBank')
+users_table = dynamodb.Table('Scores')
 
 def lambda_handler(event, context):
 
     route = event.get('routeKey')
 
-    if route == 'GET /saa-questions':
+    if route == 'POST /create-user':
+        api_body = json.loads(event.get('body'))
+
+        #api_requestContext = event.get('requestContext')
+        #user_ip = api_requestContext.get('http').get('sourceIp')
+
+        user = api_body.get('user_name')
+
+        # Create a session_id for each test score submission
+        # session_id = uuid + timestamp
+        session_id = str(uuid.uuid4()) + str(datetime.date.today())
+
+        item = {
+            "session_id" : session_id,
+            "user_name" :user
+        }
+
+        users_table.put_item(Item=item)
+
+        # Return a session id for the user and later use it to store the score
+
+        return {
+            'statusCode': 200,
+            'body' : json.dumps(session_id)
+        }
+
+
+    elif route == 'GET /saa-questions':
         # Generate 10 random unique questions from the given range to throw at the test taker
         # Use walrus operator 
-        required_question_ids = random.sample(range(1, 107), 1)
+        required_question_ids = random.sample(range(1, 107), 5)
         questions = {
             question_id : {
                 'id': int(item.get('id')),
@@ -28,8 +56,6 @@ def lambda_handler(event, context):
             'body' : json.dumps(questions)
         }
     
-
-
 
     elif route == 'POST /submit-test':
         score = 0

@@ -6,12 +6,21 @@ module "SAADynamoDBTable" {
   sort_key = null
 }
 
+module "scores" {
+  source = "../../../modules/data-stores/dy-db"
+  tableName = "Scores"
+  primary_key = "session_id"
+  primary_key_type = "S"
+  sort_key = "user_name"
+  sort_key_type = "S"
+}
+
 # Lambda Function to retrieve SAA questions from the SAA Dy DB table
 module "SAAQuestionRetriever" {
   source             = "../../../modules/lambda"
   function_name      = "saa-question-retriever"
   function_file_path = "../../../scripts/table_get.py"
-  table_arn          = module.SAADynamoDBTable.SaaQTableARN
+  table_arns          = [module.SAADynamoDBTable.SaaQTableARN, module.scores.SaaQTableARN]
   lambda_runtime     = "python3.13"
   code_file_name     = "table_get"
 }

@@ -2,14 +2,14 @@ import boto3, random, json
 
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('SAAQuestionBank')
+user_table = dynamodb.Table('Scores')
 
 def lambda_handler(event, context):
 
-    resource = event.get('resource')
+    route = event.get('routeKey')
 
 
-    
-    if resource == '/saa-questions':
+    if route == 'GET /saa-questions':
         # Generate 10 random unique questions from the given range to throw at the test taker
         # Use walrus operator 
         required_question_ids = random.sample(range(1, 107), 1)
@@ -31,14 +31,14 @@ def lambda_handler(event, context):
         }
     
 
-
-
-    elif resource == '/submit-test':
+    elif route == 'POST /submit-test':
         score = 0
 
         body = event.get('body')
         testSubmitted = json.loads(body)
         
+        # Accepts an array of objects in this format
+        # [{'id': 1, 'answer': 1}, {'id': 2, 'answer' : 0}]
         for question in testSubmitted:
             response = table.get_item(Key={'id': question['id']}).get('Item')
             if int(response['correctAnswer']) == question['answer']:

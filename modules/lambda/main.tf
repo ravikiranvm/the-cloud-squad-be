@@ -42,10 +42,11 @@ data "aws_iam_policy_document" "access_dynamodb" {
         effect = "Allow"
 
         actions = [
-            "dynamodb:GetItem"
+            "dynamodb:GetItem",
+            "dynamodb:PutItem"
         ]
 
-        resources = [var.table_arn]
+        resources = var.table_arns
     }
 }
 

@@ -8,9 +8,9 @@ variable "function_file_path" {
     type        = string
 }
 
-variable "table_arn" {
+variable "table_arns" {
     description = "ARN of the dynamodb table to access"
-    type        = string
+    type        = list(string)
 }
 
 variable "lambda_runtime" {
