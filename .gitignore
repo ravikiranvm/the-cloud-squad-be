@@ -39,3 +39,4 @@ terraform.rc
 # Other
 **/venv/*
 **scripts/*.json
+.DS_Store
