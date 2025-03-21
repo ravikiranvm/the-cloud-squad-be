@@ -28,6 +28,18 @@ resource "aws_apigatewayv2_route" "post_test" {
     target = "integrations/${aws_apigatewayv2_integration.saa_api_integration.id}"
 }
 
+resource "aws_apigatewayv2_route" "tests_taken" {
+    api_id = aws_apigatewayv2_api.saa_api.id
+    route_key = "GET /tests-taken"
+    target = "integrations/${aws_apigatewayv2_integration.saa_api_integration.id}"
+}
+
+resource "aws_apigatewayv2_route" "add_review" {
+    api_id = aws_apigatewayv2_api.saa_api.id
+    route_key = "POST /add-review"
+    target = "integrations/${aws_apigatewayv2_integration.saa_api_integration.id}"
+}
+
 #One Lambda function integration to all the routes
 resource "aws_apigatewayv2_integration" "saa_api_integration" {
     api_id = aws_apigatewayv2_api.saa_api.id

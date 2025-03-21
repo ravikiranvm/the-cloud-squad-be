@@ -3,7 +3,7 @@ import boto3, json
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('SAAQuestionBank')
 
-with open('saa1questionsFINAL.json', 'r') as f:
+with open('saa5finalquestions.json', 'r') as f:
     data = json.load(f)
 
     for item in data['questions']:
